@@ -1,0 +1,78 @@
+version: '3.8'
+
+# Uso: docker-compose -f docker-compose.dev.yml up
+# Habilita hot reload no backend e frontend
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: casino_postgres_dev
+    environment:
+      POSTGRES_DB: casino_db
+      POSTGRES_USER: casino_user
+      POSTGRES_PASSWORD: casino_secret_2024
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    networks:
+      - casino_dev
+
+  redis:
+    image: redis:7-alpine
+    container_name: casino_redis_dev
+    command: redis-server --requirepass casino_redis_2024
+    ports:
+      - '6379:6379'
+    networks:
+      - casino_dev
+
+  backend:
+    image: node:20-alpine
+    container_name: casino_backend_dev
+    working_dir: /app
+    command: sh -c "npm install && npm run start:dev"
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://casino_user:casino_secret_2024@postgres:5432/casino_db
+      REDIS_URL: redis://:casino_redis_2024@redis:6379
+      JWT_SECRET: dev_jwt_secret_nao_usar_em_producao
+      JWT_EXPIRES_IN: 7d
+      INITIAL_BALANCE: '1000'
+      PORT: 3001
+      FRONTEND_URL: http://localhost:3000
+    ports:
+      - '3001:3001'
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - casino_dev
+
+  frontend:
+    image: node:20-alpine
+    container_name: casino_frontend_dev
+    working_dir: /app
+    command: sh -c "npm install && npm run dev -- --host"
+    environment:
+      VITE_API_URL: http://localhost:3001
+      VITE_WS_URL: ws://localhost:3001
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - casino_dev
+
+volumes:
+  postgres_dev_data:
+
+networks:
+  casino_dev:
+    driver: bridge

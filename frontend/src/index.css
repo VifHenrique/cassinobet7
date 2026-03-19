@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-casino-bg text-casino-text font-body;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { @apply bg-casino-bg; }
+  ::-webkit-scrollbar-thumb { @apply bg-casino-border rounded-full; }
+  ::-webkit-scrollbar-thumb:hover { @apply bg-casino-muted; }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-gold-gradient text-casino-bg font-semibold px-6 py-3 rounded-xl 
+           hover:opacity-90 active:scale-95 transition-all duration-200 
+           shadow-[0_0_20px_rgba(245,200,66,0.3)] hover:shadow-[0_0_30px_rgba(245,200,66,0.5)];
+  }
+
+  .btn-secondary {
+    @apply bg-casino-card border border-casino-border text-casino-text font-medium px-6 py-3 
+           rounded-xl hover:border-casino-gold hover:text-casino-gold transition-all duration-200;
+  }
+
+  .card {
+    @apply bg-card-gradient border border-casino-border rounded-2xl p-6;
+  }
+
+  .input-field {
+    @apply w-full bg-casino-surface border border-casino-border rounded-xl px-4 py-3 
+           text-casino-text placeholder-casino-muted focus:outline-none focus:border-casino-gold
+           focus:ring-1 focus:ring-casino-gold transition-all duration-200;
+  }
+
+  .badge-win {
+    @apply bg-casino-green/20 text-casino-green text-xs font-semibold px-2 py-1 rounded-full;
+  }
+
+  .badge-loss {
+    @apply bg-casino-red/20 text-casino-red text-xs font-semibold px-2 py-1 rounded-full;
+  }
+
+  .gold-text {
+    @apply text-transparent bg-clip-text bg-gold-gradient;
+  }
+
+  .glow-gold {
+    box-shadow: 0 0 30px rgba(245, 200, 66, 0.4);
+  }
+
+  .glow-green {
+    box-shadow: 0 0 30px rgba(0, 200, 83, 0.4);
+  }
+
+  .glow-red {
+    box-shadow: 0 0 30px rgba(255, 23, 68, 0.4);
+  }
+}
